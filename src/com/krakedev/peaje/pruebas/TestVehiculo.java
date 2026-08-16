@@ -73,4 +73,76 @@ public class TestVehiculo {
         assertNotNull(vehiculo.getPropietario());
         assertNotNull(vehiculo.getTag());
     }
+    
+    
+    
+    
+    @Test
+    public void testRecargarTag() {
+
+        EstacionPeaje estacion = new EstacionPeaje();
+        TagElectronico tag = new TagElectronico("TAG001");
+
+        boolean resultado = estacion.recargarTag(tag, 10.00);
+
+        assertTrue(resultado);
+        assertEquals(10.00, tag.getSaldo());
+    }
+    @Test
+    public void testRecargarTagMontoInvalido() {
+
+        EstacionPeaje estacion = new EstacionPeaje();
+        TagElectronico tag = new TagElectronico("TAG001");
+
+        boolean resultado = estacion.recargarTag(tag, -5.00);
+
+        assertFalse(resultado);
+        assertEquals(0.00, tag.getSaldo());
+    }
+    @Test
+    public void testCobrarPeaje() {
+
+        EstacionPeaje estacion = new EstacionPeaje();
+
+        Conductor conductor = new Conductor(
+            "1712345678",
+            "Galo",
+            "Cisneros"
+        );
+
+        Vehiculo vehiculo = estacion.registrarVehiculo(
+            "ABC123",
+            "L",
+            conductor
+        );
+
+        estacion.recargarTag(vehiculo.getTag(), 10.00);
+
+        boolean resultado = estacion.cobrarPeaje(vehiculo);
+
+        assertTrue(resultado);
+        assertEquals(9.00, vehiculo.getTag().getSaldo());
+    }
+    @Test
+    public void testCobrarPeajeSinSaldo() {
+
+        EstacionPeaje estacion = new EstacionPeaje();
+
+        Conductor conductor = new Conductor(
+            "1712345678",
+            "Galo",
+            "Cisneros"
+        );
+
+        Vehiculo vehiculo = estacion.registrarVehiculo(
+            "ABC123",
+            "L",
+            conductor
+        );
+
+        boolean resultado = estacion.cobrarPeaje(vehiculo);
+
+        assertFalse(resultado);
+        assertEquals(0.00, vehiculo.getTag().getSaldo());
+    }
 }
