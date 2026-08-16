@@ -8,6 +8,7 @@ import com.krakedev.peaje.entidades.Conductor;
 import com.krakedev.peaje.entidades.TagElectronico;
 import com.krakedev.peaje.entidades.Vehiculo;
 import com.krakedev.peaje.servicios.EstacionPeaje;
+import com.krakedev.peaje.util.ValidadorUtil;
 
 public class TestVehiculo {
 
@@ -144,5 +145,43 @@ public class TestVehiculo {
 
         assertFalse(resultado);
         assertEquals(0.00, vehiculo.getTag().getSaldo());
+    }
+    @Test
+    public void testTransferirSaldoTag() {
+
+        EstacionPeaje estacion = new EstacionPeaje();
+
+        TagElectronico origen = new TagElectronico("TAG001");
+        TagElectronico destino = new TagElectronico("TAG002");
+
+        estacion.recargarTag(origen, 20.00);
+
+        boolean resultado = estacion.transferirSaldoTag(
+            origen,
+            destino,
+            5.00
+        );
+
+        assertTrue(resultado);
+        assertEquals(15.00, origen.getSaldo());
+        assertEquals(5.00, destino.getSaldo());
+    }
+    @Test
+    public void testTipoValido() {
+
+        assertTrue(ValidadorUtil.esTipoValido("L"));
+        assertTrue(ValidadorUtil.esTipoValido("P"));
+    }
+    @Test
+    public void testTipoInvalido() {
+
+        assertFalse(ValidadorUtil.esTipoValido("X"));
+    }
+    @Test
+    public void testMontoInvalido() {
+
+        assertFalse(ValidadorUtil.esMontoValido(0));
+        assertFalse(ValidadorUtil.esMontoValido(-10));
+        assertTrue(ValidadorUtil.esMontoValido(10));
     }
 }
