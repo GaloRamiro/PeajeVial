@@ -52,33 +52,47 @@ public class EstacionPeaje {
 
 		return vehiculo;
 	}
-	
+
 	public boolean recargarTag(TagElectronico tag, double monto) {
+
+		if (!ValidadorUtil.esMontoValido(monto)) {
+			return false;
+		}
+
+		tag.setSaldo(tag.getSaldo() + monto);
+		return true;
+	}
+
+	public boolean cobrarPeaje(Vehiculo vehiculo) {
+
+		double tarifa;
+
+		if ("L".equals(vehiculo.getTipo())) {
+			tarifa = tarifaLiviano;
+		} else {
+			tarifa = tarifaPesado;
+		}
+
+		if (vehiculo.getTag().getSaldo() < tarifa) {
+			return false;
+		}
+
+		vehiculo.getTag().setSaldo(vehiculo.getTag().getSaldo() - tarifa);
+
+		return true;
+	}
+	public boolean transferirSaldoTag(TagElectronico origen, TagElectronico destino, double monto) {
 
 	    if (!ValidadorUtil.esMontoValido(monto)) {
 	        return false;
 	    }
 
-	    tag.setSaldo(tag.getSaldo() + monto);
-	    return true;
-	}
-	public boolean cobrarPeaje(Vehiculo vehiculo) {
-
-	    double tarifa;
-
-	    if ("L".equals(vehiculo.getTipo())) {
-	        tarifa = tarifaLiviano;
-	    } else {
-	        tarifa = tarifaPesado;
-	    }
-
-	    if (vehiculo.getTag().getSaldo() < tarifa) {
+	    if (origen.getSaldo() < monto) {
 	        return false;
 	    }
 
-	    vehiculo.getTag().setSaldo(
-	        vehiculo.getTag().getSaldo() - tarifa
-	    );
+	    origen.setSaldo(origen.getSaldo() - monto);
+	    destino.setSaldo(destino.getSaldo() + monto);
 
 	    return true;
 	}
