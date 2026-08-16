@@ -11,7 +11,7 @@ public class Conductor {
 		this.apellido = apellido;
 	}
 	public Conductor() {
-	}s
+	}
 
 	public String getCedula() {
 		return cedula;
