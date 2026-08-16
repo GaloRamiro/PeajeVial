@@ -37,4 +37,10 @@ public class TagElectronico {
 	public void setActivo(boolean activo) {
 	    this.activo = activo;
 	}
+	
+	public void imprimir() {
+	    System.out.println("ID Tag: " + idTag);
+	    System.out.println("Saldo: " + saldo);
+	    System.out.println("Activo: " + activo);
+	}
 }
